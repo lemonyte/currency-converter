@@ -16,16 +16,16 @@ layout = [
 def GetRates(currency: str):
     global window
     global filePath
-    window['status_text'].update("Requesting conversion rates...", text_color='white')
+    window['status_text'].update("Requesting exchange rates...", text_color='white')
     window.refresh()
     try:
         response = requests.get(f'https://open.er-api.com/v6/latest/{currency}').json()
 
     except requests.ConnectionError:
-        raise Exception("Failed to request conversion rates: No internet connection")
+        raise Exception("Failed to request exchange rates: No internet connection")
 
     except Exception as exception:
-        raise Exception(f"Failed to request conversion rates: {exception}")
+        raise Exception(f"Failed to request exchange rates: {exception}")
 
     try:
         ratesFile = open(filePath, 'r')
