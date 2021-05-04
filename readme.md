@@ -5,11 +5,10 @@ Convert monetary values between currencies with up-to-date exchange rates.
 ## Requirements
 ### Python File
 Any operating system with Python.
-- [Python 3.9](https://www.python.org/downloads/release/python-394/) or higher
-- [`PySimpleGUI`](https://pypi.org/project/pysimplegui)
+- [Python 3.9](https://www.python.org/downloads/) or higher
+- [`PySimpleGUI`](https://pypi.org/project/PySimpleGUI/)
 ### Windows Systems
-Optional executable file for Windows users.
-Python and the required packages are included in the executable.
+Optional executable file for Windows users. Python and the required packages are included in the executable.
 - 30 MB of free space for the executable
 - 70 MB of free space for temporary files
 ## Usage
