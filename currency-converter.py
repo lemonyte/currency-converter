@@ -7,7 +7,9 @@ import PySimpleGUI as sg
 sg.theme("Black")
 
 layout = [
+    [sg.Text("Input currency")],
     [sg.Combo(['CAD', 'USD'], size=(6, None), key='input_currency', default_value='USD', readonly=True), sg.Input('1', key='input', size=(30, 1), focus=True, enable_events=True)],
+    [sg.Text("Output currency")],
     [sg.Combo(['CAD', 'USD'], size=(6, None), key='output_currency', default_value='CAD', readonly=True), sg.Input('', key='output', size=(30, 1), readonly=True, disabled_readonly_background_color='black')],
     [sg.Text(key='status_text', size=(35, 2))],
     [sg.Button("Convert", key='convert')]
