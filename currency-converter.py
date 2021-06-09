@@ -1,4 +1,5 @@
-import requests, json
+import requests
+import json
 from datetime import datetime
 from dateutil import tz
 import PySimpleGUI as sg
@@ -13,6 +14,7 @@ layout = [
     [sg.Text(key='status_text', size=(35, 2))],
     [sg.Button("Convert", key='convert')]
 ]
+
 
 def GetRates(currency: str):
     global window
@@ -32,7 +34,7 @@ def GetRates(currency: str):
         ratesFile = open(filePath, 'r')
         rates = json.load(ratesFile)
 
-    except:
+    except OSError:
         rates = {}
 
     rates[currency] = response
@@ -40,6 +42,7 @@ def GetRates(currency: str):
     json.dump(rates, ratesFile, indent=4)
     ratesFile.close()
     return dict(rates[currency])
+
 
 def Convert(input: float, input_currency: str, output_currency: str):
     global window
@@ -51,7 +54,7 @@ def Convert(input: float, input_currency: str, output_currency: str):
             with open(filePath, 'r') as ratesFile:
                 info = json.load(ratesFile)[input_currency]
 
-            if  datetime.timestamp(datetime.now()) - info['time_last_update_unix'] > 86400:
+            if datetime.timestamp(datetime.now()) - info['time_last_update_unix'] > 86400:
                 raise KeyError
 
         except (KeyError, FileNotFoundError):
@@ -64,14 +67,16 @@ def Convert(input: float, input_currency: str, output_currency: str):
         lastUpdated = datetime.fromtimestamp(info['time_last_update_unix']).replace(tzinfo=tz.tzutc())
         window['status_text'].update(f"Last updated: {lastUpdated.astimezone(tz.tzlocal()).strftime('%Y-%m-%d %H:%M:%S')}", text_color='white')
         return round(float(input) * rates[output_currency], 4)
-    
+
     except Exception as error:
         Error(error)
         return ''
 
+
 def Error(error):
     global window
     window['status_text'].update(error, text_color='red')
+
 
 filePath = 'rates.json'
 window = sg.Window("Currency Converter", layout)
