@@ -6,6 +6,8 @@ Convert monetary values between currencies with up-to-date exchange rates.
 ### Python File
 Any operating system with Python.
 - [Python 3.9](https://www.python.org/downloads/) or higher
+- [`requests`](https://pypi.org/project/requests/)
+- [`python-dateutil`](https://pypi.org/project/python-dateutil/)
 - [`PySimpleGUI`](https://pypi.org/project/PySimpleGUI/)
 ### Windows Systems
 Optional executable file for Windows users. Python and the required packages are included in the executable.
