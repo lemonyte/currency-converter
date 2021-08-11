@@ -16,86 +16,73 @@ layout = [
 ]
 
 
-def GetRates(currency: str):
+def get_rates(currency: str):
     global window
-    global filePath
+    global filepath
     window['status_text'].update("Requesting exchange rates...", text_color='white')
     window.refresh()
     try:
         response = requests.get(f'https://open.er-api.com/v6/latest/{currency}').json()
-
     except requests.ConnectionError:
         raise Exception("Failed to request exchange rates: No internet connection")
-
     except Exception as exception:
         raise Exception(f"Failed to request exchange rates: {exception}")
-
     try:
-        ratesFile = open(filePath, 'r')
-        rates = json.load(ratesFile)
-
+        file = open(filepath, 'r')
+        rates = json.load(file)
     except OSError:
         rates = {}
-
     rates[currency] = response
-    ratesFile = open(filePath, 'w')
-    json.dump(rates, ratesFile, indent=4)
-    ratesFile.close()
+    file = open(filepath, 'w')
+    json.dump(rates, file, indent=4)
+    file.close()
     return dict(rates[currency])
 
 
-def Convert(input: float, input_currency: str, output_currency: str):
+def convert(input: float, input_currency: str, output_currency: str):
     global window
-    global filePath
+    global filepath
     try:
         input_currency = input_currency.upper()
         output_currency = output_currency.upper()
         try:
-            with open(filePath, 'r') as ratesFile:
-                info = json.load(ratesFile)[input_currency]
-
+            with open(filepath, 'r') as file:
+                info = json.load(file)[input_currency]
             if datetime.timestamp(datetime.now()) - info['time_last_update_unix'] > 86400:
                 raise KeyError
-
         except (KeyError, FileNotFoundError):
-            info = GetRates(input_currency)
-
+            info = get_rates(input_currency)
         rates = dict(info['rates'])
         currencies = list(rates.keys())
         window['input_currency'].update(input_currency, values=currencies, size=(6, None))
         window['output_currency'].update(output_currency, values=currencies, size=(6, None))
-        lastUpdated = datetime.fromtimestamp(info['time_last_update_unix']).replace(tzinfo=tz.tzutc())
-        window['status_text'].update(f"Last updated: {lastUpdated.astimezone(tz.tzlocal()).strftime('%Y-%m-%d %H:%M:%S')}", text_color='white')
+        last_updated = datetime.fromtimestamp(info['time_last_update_unix']).replace(tzinfo=tz.tzutc())
+        window['status_text'].update(f"Last updated: {last_updated.astimezone(tz.tzlocal()).strftime('%Y-%m-%d %H:%M:%S')}", text_color='white')
         return round(float(input) * rates[output_currency], 4)
-
     except Exception as error:
-        Error(error)
+        show_error(error)
         return ''
 
 
-def Error(error):
+def show_error(error):
     global window
     window['status_text'].update(error, text_color='red')
 
 
-filePath = 'rates.json'
+filepath = 'rates.json'
 window = sg.Window("Currency Converter", layout)
 event, values = window.read(0)
-window['output'].update(Convert(values['input'], values['input_currency'], values['output_currency']))
+window['output'].update(convert(values['input'], values['input_currency'], values['output_currency']))
 while True:
     event, values = window.read()
     if event == sg.WIN_CLOSED:
         break
-
     elif event == 'input' and values['input'] != '' and values['input'][-1] not in '0123456789.':
         window['input'].update(values['input'][:-1])
-
     elif event == 'convert':
         if values['input'] == '':
-            Error("Please enter an amount")
+            show_error("Please enter an amount")
             window['output'].update('')
-
         else:
-            window['output'].update(Convert(values['input'], values['input_currency'], values['output_currency']))
-
+            window['output'].update(convert(values['input'], values['input_currency'], values['output_currency']))
 window.close()

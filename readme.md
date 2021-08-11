@@ -9,8 +9,8 @@ Any operating system with Python.
 - [`PySimpleGUI`](https://pypi.org/project/PySimpleGUI/)
 ### Windows Systems
 Optional executable file for Windows users. Python and the required packages are included in the executable.
-- 30 MB of free space for the executable
-- 70 MB of free space for temporary files
+- 10 MB of free space for the executable
+- 12 MB of free space for temporary files
 ## Usage
 Select an input currency and an output currency, then click the "Convert" button. The currency converter will request exchange rates for the input currency, and save the exchange rates to a file `rates.json`. This file allows for caching and later offline use. Saved exchange rates are updated if they are older than 24 hours. You may delete the `rates.json` file if you wish, the program will just download the exchange rates again next time it is used.
 ## License
