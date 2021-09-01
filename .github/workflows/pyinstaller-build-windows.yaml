@@ -24,8 +24,15 @@ jobs:
         python -m pip install --upgrade pip wheel setuptools pyinstaller
         (test -f requirements.txt && pip install -r requirements.txt) || echo "'requirements.txt' does not exist, skipping dependency installation"
 
-    - name: Build Windows Executable
-      run: pyinstaller --clean -y --dist ./dist/windows build.spec
+    - name: Install UPX
+      run: |
+        Invoke-WebRequest https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip -OutFile ./upx-3.96-win64.zip
+        Expand-Archive -Path upx-3.96-win64.zip -DestinationPath .
+        Move-Item -Path upx-3.96-win64/upx.* -Destination .
+
+    - name: Build Windows Executable With UPX
+      run: |
+        pyinstaller --clean -y --dist ./dist/windows --upx-dir . build.spec
 
     - name: Release
       uses: softprops/action-gh-release@v1
