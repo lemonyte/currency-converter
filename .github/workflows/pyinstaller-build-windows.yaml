@@ -30,7 +30,7 @@ jobs:
         Expand-Archive -Path upx-3.96-win64.zip -DestinationPath .
         Move-Item -Path upx-3.96-win64/upx.* -Destination .
 
-    - name: Build Windows Executable With UPX
+    - name: Build Windows Executable
       run: |
         pyinstaller --clean -y --dist ./dist/windows --upx-dir . build.spec
 
