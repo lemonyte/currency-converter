@@ -1,6 +1,8 @@
 # Currency Converter
 By [LemonPi314](https://github.com/LemonPi314)
 
+Thanks to [itsMalb](https://github.com/itsMalb) for the original idea.
+
 Convert monetary values between currencies with up-to-date exchange rates.
 ## Requirements
 ### Python File
